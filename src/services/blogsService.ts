@@ -12,6 +12,7 @@ export class blogsService {
         "insert into blogs ( url_image, category, title, sub_title) values ( $1, $2, $3, $4)",
         [url, body.category, body.title, body.sub_title]
       );
+      return { message: "todo ok" };
     } catch (error) {}
   }
 
