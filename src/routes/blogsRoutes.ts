@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  blogGetId,
   blogsCreate,
   blogsDelete,
   blogsGetPage,
@@ -27,6 +28,10 @@ blogsRoutes.delete(
 
 blogsRoutes.get("/page/:page", async (req, res, next) =>
   blogsGetPage(req, res, next)
+);
+
+blogsRoutes.get("/one/:id", async (req, res, next) =>
+  blogGetId(req, res, next)
 );
 
 export { blogsRoutes };

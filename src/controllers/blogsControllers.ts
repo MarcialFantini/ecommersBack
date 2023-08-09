@@ -61,3 +61,15 @@ export const blogsGetPage = async (
 
   res.json(listBlogs);
 };
+
+export const blogGetId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const idParam = req.params.id;
+
+  const blog = await BlogsService.getBlogForId(idParam);
+
+  res.json(blog);
+};

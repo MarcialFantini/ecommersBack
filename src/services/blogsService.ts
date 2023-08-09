@@ -71,4 +71,14 @@ export class blogsService {
 
     return blogGet.rows;
   }
+
+  async getBlogForId(id: number | string) {
+    const idNumber = Number(id);
+
+    const blog = await pool.query("SELECT * FROM blogs WHERE id = $1", [
+      idNumber,
+    ]);
+
+    return blog.rows[0];
+  }
 }
