@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { blogsService, bodyBlogCreator } from "../services/blogsService";
+import path from "path";
 
 const BlogsService = new blogsService();
 
@@ -8,17 +9,21 @@ export const blogsCreate = async (
   res: Response,
   next: NextFunction
 ) => {
-  const body = {
-    category: req.body.category,
-    title: req.body.title,
-    sub_title: req.body.sub_title,
-  } as bodyBlogCreator;
+  try {
+    const body = {
+      category: req.body.category,
+      title: req.body.title,
+      sub_title: req.body.sub_title,
+    } as bodyBlogCreator;
 
-  const url = req.body.file as string;
-
-  const responseReturn = await BlogsService.createBLog(body, url);
-
-  res.json(responseReturn);
+    const url = path.normalize(
+      [__dirname, "//..//..//", req.file?.path].join("")
+    );
+    const responseReturn = await BlogsService.createBLog(body, url);
+    res.json(responseReturn);
+  } catch (error) {
+    res.json(error);
+  }
 };
 
 export const blogsDelete = async (

@@ -13,7 +13,9 @@ export class blogsService {
         [url, body.category, body.title, body.sub_title]
       );
       return { message: "todo ok" };
-    } catch (error) {}
+    } catch (error) {
+      return { message: error };
+    }
   }
 
   async delateBlog(id: number) {
@@ -29,27 +31,34 @@ export class blogsService {
       return {
         message: "todo ok",
       };
-    } catch (error) {}
+    } catch (error) {
+      return {
+        message: "todo mal",
+        error,
+      };
+    }
   }
 
   async updateBlog(id: number, body: bodyBlogCreator) {
-    const baseQuery = "UPDATE blogs SET ";
-    const valuesSet: string[] = [];
-    const values: any[] = [];
+    try {
+      const baseQuery = "UPDATE blogs SET ";
+      const valuesSet: string[] = [];
+      const values: any[] = [];
 
-    Object.entries(body).forEach((item, index) => {
-      valuesSet.push(`${item[0]}=$${index + 1}`);
-      values.push(item[1]);
-    });
+      Object.entries(body).forEach((item, index) => {
+        valuesSet.push(`${item[0]}=$${index + 1}`);
+        values.push(item[1]);
+      });
 
-    values.push(id);
+      values.push(id);
 
-    const queryComplete = `${baseQuery} ${valuesSet} WHERE id = $${
-      values.length + 1
-    }`;
+      const queryComplete = `${baseQuery} ${valuesSet} WHERE id = $${values.length}`;
 
-    const blogUpdate = await pool.query(queryComplete, [...values, id]);
+      const blogUpdate = await pool.query(queryComplete, values);
 
-    return { message: "todo ok" };
+      return { message: "todo ok" };
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

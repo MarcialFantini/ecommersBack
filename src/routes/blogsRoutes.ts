@@ -4,11 +4,13 @@ import {
   blogsDelete,
   blogsUpdate,
 } from "../controllers/blogsControllers";
+import { upload } from "../middleware/multer";
 
 const blogsRoutes = Router();
 
 blogsRoutes.post(
   "/create/blog",
+  upload.single("image"),
   async (req, res, next) => await blogsCreate(req, res, next)
 );
 
@@ -22,4 +24,4 @@ blogsRoutes.delete(
   async (req, res, next) => await blogsDelete(req, res, next)
 );
 
-export { blogsCreate };
+export { blogsRoutes };
