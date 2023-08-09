@@ -49,3 +49,15 @@ export const blogsUpdate = async (
   const responseReturn = await BlogsService.updateBlog(id, body);
   res.json(responseReturn);
 };
+
+export const blogsGetPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const page = req.params.page;
+
+  const listBlogs = await BlogsService.getPage(page);
+
+  res.json(listBlogs);
+};

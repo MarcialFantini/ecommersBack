@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   blogsCreate,
   blogsDelete,
+  blogsGetPage,
   blogsUpdate,
 } from "../controllers/blogsControllers";
 import { upload } from "../middleware/multer";
@@ -22,6 +23,10 @@ blogsRoutes.patch(
 blogsRoutes.delete(
   "/delete/blog/:id",
   async (req, res, next) => await blogsDelete(req, res, next)
+);
+
+blogsRoutes.get("/page/:page", async (req, res, next) =>
+  blogsGetPage(req, res, next)
 );
 
 export { blogsRoutes };

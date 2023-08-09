@@ -61,4 +61,14 @@ export class blogsService {
       console.log(error);
     }
   }
+
+  async getPage(page: number | string) {
+    const pageNumber = Number(page) < 0 ? 0 : Number(page);
+
+    const blogGet = await pool.query("SELECT * FROM blogs LIMIT 10 OFFSET $1", [
+      pageNumber * 10,
+    ]);
+
+    return blogGet.rows;
+  }
 }
