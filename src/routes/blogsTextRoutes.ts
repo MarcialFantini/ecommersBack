@@ -5,25 +5,21 @@ import {
   getTextAllBlogController,
   updateTextController,
 } from "../controllers/blogsTextControllers";
+import { autIsAdmin, autJWT } from "../middleware/jwtValidator";
 
 const blogsTextRoutes = Router();
 
-blogsTextRoutes.post("/create", async (req, res, next) =>
-  createTextController(req, res, next)
-);
+blogsTextRoutes.post("/create", autJWT, autIsAdmin, createTextController);
 
-blogsTextRoutes.delete("/delete/:id", async (req, res, next) =>
-  deleteTextController(req, res, next)
-);
+blogsTextRoutes.delete("/delete/:id", autJWT, autIsAdmin, deleteTextController);
 
 blogsTextRoutes.patch(
   "/update/text/:id",
-  async (req, res, next) => await updateTextController(req, res, next)
+  autJWT,
+  autIsAdmin,
+  updateTextController
 );
 
-blogsTextRoutes.get(
-  "/all/:id",
-  async (req, res, next) => await getTextAllBlogController(req, res, next)
-);
+blogsTextRoutes.get("/all/:id", getTextAllBlogController);
 
 export { blogsTextRoutes };

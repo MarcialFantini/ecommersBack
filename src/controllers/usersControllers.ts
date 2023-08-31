@@ -15,11 +15,14 @@ export const userCreator = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("hola");
-  const body = req.body as bodyUserCreator;
-  const data = await serviceUser.createUser();
+  try {
+    const body = req.body as bodyUserCreator;
+    const data = await serviceUser.createUser(body);
 
-  res.json(data);
+    res.json(data);
+  } catch (error) {
+    res.json(error);
+  }
 };
 
 export const userDelete = async (
@@ -35,5 +38,21 @@ export const userDelete = async (
     res.json({
       message: "deleted",
     });
+  }
+};
+
+export const loginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { password, email } = req.body as { password: string; email: string };
+
+    const resForReturn = await serviceUser.userLogin(password, email);
+
+    res.json(resForReturn);
+  } catch (error) {
+    res.json({ errorMessage: "Error", error });
   }
 };

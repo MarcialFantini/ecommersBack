@@ -7,31 +7,24 @@ import {
   blogsUpdate,
 } from "../controllers/blogsControllers";
 import { upload } from "../middleware/multer";
+import { autIsAdmin, autJWT } from "../middleware/jwtValidator";
 
 const blogsRoutes = Router();
 
 blogsRoutes.post(
   "/create/blog",
+  autJWT,
+  autIsAdmin,
   upload.single("image"),
-  async (req, res, next) => await blogsCreate(req, res, next)
+  blogsCreate
 );
 
-blogsRoutes.patch(
-  "/update/blog/:id",
-  async (req, res, next) => await blogsUpdate(req, res, next)
-);
+blogsRoutes.patch("/update/blog/:id", autJWT, autIsAdmin, blogsUpdate);
 
-blogsRoutes.delete(
-  "/delete/blog/:id",
-  async (req, res, next) => await blogsDelete(req, res, next)
-);
+blogsRoutes.delete("/delete/blog/:id", autJWT, autIsAdmin, blogsDelete);
 
-blogsRoutes.get("/page/:page", async (req, res, next) =>
-  blogsGetPage(req, res, next)
-);
+blogsRoutes.get("/page/:page", blogsGetPage);
 
-blogsRoutes.get("/one/:id", async (req, res, next) =>
-  blogGetId(req, res, next)
-);
+blogsRoutes.get("/one/:id", blogGetId);
 
 export { blogsRoutes };

@@ -7,31 +7,18 @@ import {
   productPage,
   productUpdate,
 } from "../controllers/productsControllers";
+import { autIsAdmin, autJWT } from "../middleware/jwtValidator";
 
 const productRoutes = Router();
 
-productRoutes.post("/create", upload.single("image"), (req, res, next) => {
-  productCreate(req, res, next);
-});
+productRoutes.post("/create", upload.single("image"), productCreate);
 
-productRoutes.patch(
-  "/update/:id",
-  async (req, res, next) => await productUpdate(req, res, next)
-);
+productRoutes.patch("/update/:id", autJWT, autIsAdmin, productUpdate);
 
-productRoutes.delete(
-  "/delete/:id",
-  async (req, res, next) => await productDelete(req, res, next)
-);
+productRoutes.delete("/delete/:id", autJWT, autIsAdmin, productDelete);
 
-productRoutes.get(
-  "/page/:page",
-  async (req, res, next) => await productPage(req, res, next)
-);
+productRoutes.get("/page/:page", productPage);
 
-productRoutes.get(
-  "/one/:id",
-  async (req, res, next) => await productForId(req, res, next)
-);
+productRoutes.get("/one/:id", productForId);
 
 export { productRoutes };

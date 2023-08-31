@@ -2,6 +2,7 @@ import express from "express";
 import { pool } from "./libs/pg";
 import bodyParser from "body-parser";
 import { setUpRoutes } from "./routes/setUpRoutes";
+import cors from "cors";
 
 const fecha = async () => {
   console.log((await pool.query("SELECT NOW() as now")).rows[0]);
@@ -10,6 +11,7 @@ const fecha = async () => {
 fecha();
 
 const App = express();
+App.use(cors());
 App.use(bodyParser.urlencoded({ extended: false }));
 App.use(bodyParser.json());
 
