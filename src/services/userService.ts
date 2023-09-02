@@ -5,13 +5,21 @@ import jwt from "jsonwebtoken";
 const passwordToken = "hola123";
 
 export interface UserInterface {
+  id: number;
+  name: string;
+  is_admin: boolean;
+  password: string;
+  email: string;
+}
+
+interface bodyUserCreator {
   name: string;
   is_admin: boolean;
   password: string;
   email: string;
 }
 export class userService {
-  async createUser(user: UserInterface) {
+  async createUser(user: bodyUserCreator) {
     const pass = await bcrypt.hash(user.password, 10);
 
     const data = await pool.query(
@@ -51,7 +59,7 @@ export class userService {
     }
 
     const token = jwt.sign(
-      { email: person.email, isAdmin: person.is_admin },
+      { email: person.email, isAdmin: person.is_admin, idUser: person.id },
       passwordToken
     );
 

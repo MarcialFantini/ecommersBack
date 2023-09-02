@@ -19,13 +19,21 @@ export const autJWT = async (
       return res.status(401).json({ message: "Token inválido." });
     }
     console.log(decoded);
-    req.body.user = decoded; // Guarda la información del usuario decodificada en el objeto de solicitud
+    req.body.user = decoded as {
+      email: string;
+      isAdmin: boolean;
+      idUser: number;
+    }; // Guarda la información del usuario decodificada en el objeto de solicitud
     next();
   });
 };
 
 export const autIsAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.body.user as { email: string; isAdmin: boolean };
+  const token = req.body.user as {
+    email: string;
+    isAdmin: boolean;
+    idUser: number;
+  };
 
   console.log(token);
 
