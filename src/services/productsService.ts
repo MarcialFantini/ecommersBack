@@ -72,11 +72,18 @@ export class productService {
   }
 
   async getPage(page: number) {
-    const data = await pool.query("SELECT * FROM products LIMIT 20 OFFSET $1", [
-      page,
-    ]);
+    try {
+      const pageOffSet = page >= 0 ? page * 12 : 0;
 
-    return data.rows;
+      const data = await pool.query(
+        "SELECT * FROM products LIMIT 12 OFFSET $1",
+        [pageOffSet]
+      );
+
+      return data.rows;
+    } catch (error) {
+      return error;
+    }
   }
 
   async getProductForId(id: number) {

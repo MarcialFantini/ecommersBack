@@ -12,6 +12,8 @@ export class ServiceTextBlog {
         "INSERT INTO blog_text(text_blog,id_blog) VALUES ( $1,$2)",
         [body.text_blog, body.id_blog]
       );
+
+      console.log(blogTextCreate);
       return blogTextCreate;
     } catch (error) {
       return error;

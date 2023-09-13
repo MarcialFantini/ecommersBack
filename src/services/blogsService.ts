@@ -1,17 +1,43 @@
 import { pool } from "../libs/pg";
+import { ServiceTextBlog } from "./textBlogService";
 
 export interface bodyBlogCreator {
   category: string;
   title: string;
   sub_title: string;
+
+  texts: string[];
 }
+
+export interface BlogInterface {
+  id: number;
+  url_image: string;
+  category: string;
+  title: string;
+  sub_title: string;
+}
+
+const serviceText = new ServiceTextBlog();
+
 export class blogsService {
-  async createBLog(body: bodyBlogCreator, url: string) {
+  async createBLog(body: bodyBlogCreator, url: string, texts: string[]) {
     try {
       const blog = await pool.query(
-        "insert into blogs ( url_image, category, title, sub_title) values ( $1, $2, $3, $4)",
+        `insert into blogs ( url_image, category, title, sub_title) values ( $1, $2, $3, $4)  RETURNING id;`,
         [url, body.category, body.title, body.sub_title]
       );
+
+      const id = blog.rows[0].id as number;
+
+      const listPromise = texts.map((text) => {
+        return pool.query(
+          "INSERT INTO blog_text(text_blog,id_blog) VALUES( $1 , $2 );",
+          [text, id]
+        );
+      });
+
+      Promise.all(listPromise);
+
       return { message: "todo ok" };
     } catch (error) {
       return { message: error };
@@ -80,5 +106,47 @@ export class blogsService {
     ]);
 
     return blog.rows[0];
+  }
+
+  async getBlogsComplete(page: number) {
+    try {
+      const limit = page >= 0 ? page * 10 : 0;
+
+      const blogsQuery = await pool.query(
+        "SELECT * FROM blogs LIMIT 10 OFFSET $1;",
+        [limit]
+      );
+
+      const listBlogs = blogsQuery.rows as BlogInterface[];
+
+      const listBlogsWithText = await Promise.all(
+        listBlogs.map((item) => {
+          return pool.query("SELECT * FROM blog_text WHERE id_blog = $1;", [
+            item.id,
+          ]);
+        })
+      );
+
+      const data = await listBlogs.map((blog, index) => {
+        return {
+          ...blog,
+          listText: listBlogsWithText[index].rows,
+        };
+      });
+
+      return data;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getAdminBlogPage(page: number) {
+    const pageOffSet = page > 0 ? page * 10 : 0;
+    const blogsQuery = await pool.query(
+      "SELECT id,category,title,sub_title from blogs LIMIT 10 OFFSET $1;",
+      [pageOffSet]
+    );
+
+    return blogsQuery.rows;
   }
 }

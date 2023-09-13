@@ -16,10 +16,13 @@ export const blogsCreate = async (
       sub_title: req.body.sub_title,
     } as bodyBlogCreator;
 
+    console.log(req.body);
+    const texts = JSON.parse(req.body.texts) as string[];
+
     const url = path.normalize(
       [__dirname, "//..//..//", req.file?.path].join("")
     );
-    const responseReturn = await BlogsService.createBLog(body, url);
+    const responseReturn = await BlogsService.createBLog(body, url, texts);
     res.json(responseReturn);
   } catch (error) {
     res.json(error);
@@ -72,4 +75,36 @@ export const blogGetId = async (
   const blog = await BlogsService.getBlogForId(idParam);
 
   res.json(blog);
+};
+
+export const blogsGetPageComplete = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const responseReturn = await BlogsService.getBlogsComplete(
+      Number(req.params.page)
+    );
+
+    res.json(responseReturn);
+  } catch (error) {
+    res.json(error);
+  }
+};
+
+export const pageBlogAdmin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const page = Number(req.params.page);
+
+    const blogs = await BlogsService.getAdminBlogPage(page);
+
+    res.json(blogs);
+  } catch (error) {
+    console.log(error);
+  }
 };

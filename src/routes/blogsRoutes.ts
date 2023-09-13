@@ -4,7 +4,9 @@ import {
   blogsCreate,
   blogsDelete,
   blogsGetPage,
+  blogsGetPageComplete,
   blogsUpdate,
+  pageBlogAdmin,
 } from "../controllers/blogsControllers";
 import { upload } from "../middleware/multer";
 import { autIsAdmin, autJWT } from "../middleware/jwtValidator";
@@ -13,9 +15,8 @@ const blogsRoutes = Router();
 
 blogsRoutes.post(
   "/create/blog",
-  autJWT,
-  autIsAdmin,
   upload.single("image"),
+
   blogsCreate
 );
 
@@ -25,6 +26,10 @@ blogsRoutes.delete("/delete/blog/:id", autJWT, autIsAdmin, blogsDelete);
 
 blogsRoutes.get("/page/:page", blogsGetPage);
 
+blogsRoutes.get("/page/complete/:page", blogsGetPageComplete);
+
 blogsRoutes.get("/one/:id", blogGetId);
+
+blogsRoutes.get("/admin/page/:page", pageBlogAdmin);
 
 export { blogsRoutes };

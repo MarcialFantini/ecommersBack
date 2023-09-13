@@ -23,11 +23,11 @@ export class userService {
     const pass = await bcrypt.hash(user.password, 10);
 
     const data = await pool.query(
-      `INSERT INTO users(name,isadmin,password,email) VALUES ($1,$2,$3,$4)`,
-      [user.name, user.is_admin, pass, user.email]
+      `INSERT INTO users(name,is_admin,password,email) VALUES ($1,$2,$3,$4)`,
+      [user.name, !!user.is_admin, pass, user.email]
     );
 
-    return data;
+    return { message: "created user", code: 201 };
   }
 
   async userDelete(id: number) {
@@ -63,6 +63,6 @@ export class userService {
       passwordToken
     );
 
-    return { token: token, code: 200 };
+    return { token: token, code: 200, isAdmin: person.is_admin };
   }
 }

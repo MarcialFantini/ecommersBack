@@ -18,7 +18,7 @@ export const autJWT = async (
     if (err) {
       return res.status(401).json({ message: "Token inválido." });
     }
-    console.log(decoded);
+
     req.body.user = decoded as {
       email: string;
       isAdmin: boolean;

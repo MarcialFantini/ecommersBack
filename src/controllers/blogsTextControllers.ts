@@ -11,11 +11,15 @@ export const createTextController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const body = req.body as blogTextCreatorInterface;
+  try {
+    const body = req.body as blogTextCreatorInterface;
 
-  const responseCreate = await serviceText.createBlogText(body);
+    const responseCreate = await serviceText.createBlogText(body);
 
-  res.json(responseCreate);
+    res.json(responseCreate);
+  } catch (error) {
+    res.json(error);
+  }
 };
 
 export const deleteTextController = async (

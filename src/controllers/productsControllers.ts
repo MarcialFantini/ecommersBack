@@ -8,10 +8,14 @@ export const productCreate = async (
   next: NextFunction
 ) => {
   const body = req.body as bodyCreate;
+  console.log(body);
+  console.log(req.file, req.files);
 
   if (req.file?.path) {
     serviceProduct.create(req.file.path, body);
     res.json("todo ok");
+  } else {
+    res.json("error in file");
   }
 };
 
@@ -56,8 +60,12 @@ export const productForId = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = Number(req.params.id);
-  const product = await serviceProduct.getProductForId(id);
+  try {
+    const id = Number(req.params.id);
+    const product = await serviceProduct.getProductForId(id);
 
-  res.json(product[0]);
+    res.json(product[0]);
+  } catch (error) {
+    res.json(error);
+  }
 };

@@ -21,7 +21,7 @@ export const userCreator = async (
 
     res.json(data);
   } catch (error) {
-    res.json(error);
+    res.json({ message: error, code: 500 });
   }
 };
 

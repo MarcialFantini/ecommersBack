@@ -20,5 +20,5 @@ const port = 5000;
 setUpRoutes(App);
 
 App.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+  console.log(`http://localhost:${port}/api/v1/`);
 });
